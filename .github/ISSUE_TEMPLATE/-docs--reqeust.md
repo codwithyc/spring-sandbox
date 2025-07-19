@@ -1,6 +1,6 @@
 ---
 name: "[Docs] reqeust"
-about: Describe this issue template's purpose here.
+about: 문서 관리 이슈 템플릿
 title: ''
 labels: "\U0001F4C3 Docs"
 assignees: codwithyc
