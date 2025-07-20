@@ -1,0 +1,31 @@
+name: Production CI & Deploy
+
+on:
+  push:
+    tags: ["v*"]      # v1.0.0, v1.2.3 등 'v'로 시작하는 태그 푸시 시에만 실행
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read   # 코드 읽기 권한
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build & Test
+        run: ./gradlew clean build --info
+
+      - name: Deploy to Production
+        run: |
+          ./scripts/deploy-prod.sh
