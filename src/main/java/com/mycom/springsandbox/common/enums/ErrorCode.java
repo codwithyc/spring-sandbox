@@ -1,7 +1,9 @@
 package com.mycom.springsandbox.common.enums;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public enum ErrorCode {
 
     // 사용자 관련(1000 ~ 1999)
@@ -20,17 +22,5 @@ public enum ErrorCode {
         this.code = code;
         this.defaultMessage = defaultMessage;
         this.httpStatus = httpStatus;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDefaultMessage() {
-        return defaultMessage;
-    }
-
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
     }
 }
