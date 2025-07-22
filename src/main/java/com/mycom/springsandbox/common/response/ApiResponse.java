@@ -67,7 +67,7 @@ public record ApiResponse<T>(
                 .errorCode(ec.getCode())
                 .message(ec.getDefaultMessage())
                 .data(data)
-                .timestamp(now())
+                .timestamp(getCurrentTimestamp())
                 .build();
     }
 }
