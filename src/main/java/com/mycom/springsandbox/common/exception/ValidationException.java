@@ -2,11 +2,11 @@ package com.mycom.springsandbox.common.exception;
 
 import com.mycom.springsandbox.common.enums.ErrorCode;
 
-public class ValidationException extends RuntimeException {
+public class ValidationException extends BusinessException {
   private final ErrorCode errorCode;
 
   public ValidationException(ErrorCode errorCode, String message) {
-    super(message);
+    super(errorCode, message);
     this.errorCode = errorCode;
   }
 

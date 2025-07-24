@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import java.util.ConcurrentModificationException;
-
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -23,7 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusiness(BusinessException ex, WebRequest req) {
         ErrorResponse body = ErrorResponse.of(
-                ex.getErrorCode().getCode(),
+                ex.getErrorCode().getHttpStatus().value(),
                 ex.getErrorCode().name(),
                 ex.getErrorCode().getDefaultMessage(),
                 req.getDescription(false).replace("uri=", "")

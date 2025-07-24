@@ -16,7 +16,7 @@ public enum ErrorCode {
 
     // 공통 오류(9000~9999)
     NOT_FOUND(9001, "존재하지 않는 API 입니다.", HttpStatus.NOT_FOUND),
-    VALIDATION_FAILED   (9002, "입력값이 유효하지 않습니다.", HttpStatus.BAD_REQUEST),
+    VALIDATION_FAILED(9002, "입력값이 유효하지 않습니다.", HttpStatus.BAD_REQUEST),
     INTERNAL_SERVER_ERROR(9003, "서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 
 
