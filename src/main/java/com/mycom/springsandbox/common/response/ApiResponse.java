@@ -47,27 +47,4 @@ public record ApiResponse<T>(
                 .timestamp(getCurrentTimestamp())
                 .build();
     }
-
-    // 에러만 알릴 때
-    public static <T> ApiResponse<T> error(ErrorCode ec) {
-        Objects.requireNonNull(ec, "메시지는 null일 수 없습니다.");
-        return ApiResponse.<T>builder()
-                .success(false)
-                .errorCode(ec.getCode())
-                .message(ec.getDefaultMessage())
-                .timestamp(getCurrentTimestamp())
-                .build();
-    }
-
-    // 에러 + 추가 데이터
-    public static <T> ApiResponse<T> error(ErrorCode ec, T data) {
-        Objects.requireNonNull(ec);
-        return ApiResponse.<T>builder()
-                .success(false)
-                .errorCode(ec.getCode())
-                .message(ec.getDefaultMessage())
-                .data(data)
-                .timestamp(getCurrentTimestamp())
-                .build();
-    }
 }
