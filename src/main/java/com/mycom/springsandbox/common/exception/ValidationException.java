@@ -10,6 +10,7 @@ public class ValidationException extends BusinessException {
     this.errorCode = errorCode;
   }
 
+  @Override
   public ErrorCode getErrorCode() {
     return errorCode;
   }
