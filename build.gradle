@@ -44,4 +44,15 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    reports {
+        html.required.set(true) // HTML 리포트 생성
+    }
+    testLogging {
+        events "PASSED", "SKIPPED", "FAILED"
+        showStandardStreams = true // 표준 출력 및 오류 스트림 표시
+        exceptionFormat "full" // 예외의 전체 스택 트레이스 표시
+        showCauses = true // 예외의 원인 표시
+        showExceptions = true // 예외 표시
+        showStackTraces = true // 스택 트레이스 표시
+    }
 }
