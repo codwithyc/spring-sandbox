@@ -37,9 +37,12 @@
 - 태그: `v{메이저}.{마이너}.{패치}` 형식 준수
 
 ## 🛠 세부 가이드 및 참고
-- **CI 설정**: `.github/workflows/ci.yml`, `cd.yml` 확인
+- **Git Flow 초기 설정**: `docs/common/GIT_FLOW_SETUP.md`에서 상세 설정 방법 확인
+- **GitHub 저장소 설정**: `docs/common/GITHUB_SETTINGS.md`에서 브랜치 보호 규칙 등 관리자 설정 확인
+- **커밋 메시지 컨벤션**: `docs/common/COMMIT_CONVENTION.md`에서 Conventional Commits 및 Jira 연동 규칙 확인
+- **Jira 연동**: `docs/common/JIRA_INTEGRATION.md`에서 Jira-GitHub 연동 설정 확인
+- **CI 설정**: `.github/workflows/ci-dev.yml`, `ci-prod.yml` 확인
 - **DB 마이그레이션**: Flyway 또는 Liquibase 스크립트(`src/main/resources/db/migration/`) 버전 관리
-- **배포 문서**: `docs/DEPLOYMENT.md`에서 상세 배포 절차 참고
 - **이슈 템플릿**: `.github/ISSUE_TEMPLATE/` 내 Docs, Bug, Feature, Release 등 템플릿 활용
 
 ---
