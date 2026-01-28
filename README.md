@@ -21,3 +21,21 @@
 ---
 LLM(GPT, Claude 등)에 의존하는 것이 아니라,  
 **내 손으로 문제를 파악하고, 설계하고, 구현하고, 설명할 수 있는 백엔드 개발자**가 되기 위한 여정을 이 레포에 담고자 합니다.
+
+---
+
+## 📖 개발 프로세스 문서
+
+### Git Flow 및 협업
+- [브랜치 전략 (Branch Strategy)](./docs/common/BRANCH_STRATEGY.md) - Git Flow 워크플로우 개요
+- [Git Flow 설정 가이드](./docs/common/GIT_FLOW_SETUP.md) - 초기 설정 및 상세 가이드
+- [커밋 메시지 컨벤션](./docs/common/COMMIT_CONVENTION.md) - Conventional Commits 및 Jira 연동
+- [GitHub 저장소 설정 (관리자용)](./docs/common/GITHUB_SETTINGS.md) - 브랜치 보호 규칙 등
+- [Jira 연동 가이드](./docs/common/JIRA_INTEGRATION.md) - Jira-GitHub 통합 설정
+
+### 기타 문서
+- [예외 처리 가이드](./docs/common/EXEPTION_HANDLING.md) - 예외 처리 전략
+- [문서 인덱스](./docs/common/README.md) - 모든 문서 목록
+
+> 💡 **새로운 개발자를 위한 시작 가이드**: [docs/common/README.md](./docs/common/README.md)에서 온보딩 체크리스트를 확인하세요.
+
