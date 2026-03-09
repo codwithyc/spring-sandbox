@@ -2,7 +2,9 @@ name: Production CI & Deploy
 
 on:
   push:
-    tags: ["v*"]      # v1.0.0, v1.2.3 등 'v'로 시작하는 태그 푸시 시에만 실행
+    tags: ["v_*"]      # v1.0.0, v1.2.3 등 'v'로 시작하는 태그 푸시 시에만 실행
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build-and-deploy:
@@ -27,5 +29,6 @@ jobs:
         run: ./gradlew clean build --info
 
       - name: Deploy to Production
+        if: startsWith(github.ref, 'refs/tags/v_') # 태그 푸시일 때만 배포 실행
         run: |
           ./scripts/deploy-prod.sh
