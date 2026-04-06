@@ -27,13 +27,8 @@
 - 로그, 예외 시점, 외부 시스템 기록과 비교하기 쉽다고 보았습니다.
 - 운영 추적용 메타데이터에 더 적합하다고 판단했습니다.
 
-## 4. 결과 (Consequences)
-- 요청-응답-로그 간 시점 비교 기준을 일관되게 유지할 수 있게 되었습니다.
-- 향후 다국가 환경으로 확장되더라도 내부 시간 기준이 흔들리지 않도록 했습니다.
-- 사용자에게 보여주는 시간은 별도 시간대 변환이 필요하게 되었습니다.
-- 비즈니스 로컬 시간은 이 정책과 분리해서 다루기로 했습니다.
-
-## 6. 관련 문서/코드 링크
+## 4. 관련 문서/코드 링크
 - `src/main/java/com/mycom/springsandbox/common/api/ApiMeta.java`
 - `src/main/java/com/mycom/springsandbox/common/api/ApiEnvelopes.java`
 - `src/main/java/com/mycom/springsandbox/common/config/TimeConfig.java`
+- `docs/common/v1/theory/java/time/UtcAndKst.md`
