@@ -9,7 +9,7 @@
 커밋 메시지 작성을 위해 프로젝트 루트의 `.gitmessage.txt` 파일을 사용한다.
 
 적용 명령어:
-`git config --local set commit.template .gitmessage.txt`
+`git config --local commit.template .gitmessage.txt`
 
 ### 커밋 메시지 형식
 ```text
