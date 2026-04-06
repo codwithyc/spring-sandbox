@@ -2,7 +2,7 @@ name: Production CI & Deploy
 
 on:
   push:
-    tags: ["v_*"]      # v1.0.0, v1.2.3 등 'v'로 시작하는 태그 푸시 시에만 실행
+    tags: ["v_*"]      # v_1.0.0, v_1.2.3 등 'v'로 시작하는 태그 푸시 시에만 실행
   pull_request:
     branches: [ "main" ]
 
