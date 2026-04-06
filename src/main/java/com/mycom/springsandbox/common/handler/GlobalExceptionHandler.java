@@ -1,93 +1,110 @@
 package com.mycom.springsandbox.common.handler;
 
+import com.mycom.springsandbox.common.api.ApiEnvelope;
+import com.mycom.springsandbox.common.api.ApiEnvelopes;
+import com.mycom.springsandbox.common.error.ApiError;
 import com.mycom.springsandbox.common.enums.ErrorCode;
+import com.mycom.springsandbox.common.error.ErrorCodeSpec;
+import com.mycom.springsandbox.common.error.FieldErrorItem;
 import com.mycom.springsandbox.common.exception.BusinessException;
-import com.mycom.springsandbox.common.response.ErrorResponse;
+import com.mycom.springsandbox.common.web.RequestIds;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.slf4j.MDC;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-@Slf4j
-@ControllerAdvice
+import java.util.List;
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 1) 비즈니스 예외 처리
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private final ApiEnvelopes envelopes;
+
+    public GlobalExceptionHandler(ApiEnvelopes envelopes) {
+        this.envelopes = envelopes;
+    }
+
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusiness(BusinessException ex, WebRequest req) {
-        ErrorResponse body = ErrorResponse.of(
-                ex.getErrorCode().getHttpStatus().value(),
-                ex.getErrorCode().name(),
-                ex.getErrorCode().getDefaultMessage(),
-                req.getDescription(false).replace("uri=", "")
-        );
-        return ResponseEntity
-                .status(ex.getErrorCode().getHttpStatus())
-                .body(body);
+    public ResponseEntity<ApiEnvelope<Void>> handleBusiness(BusinessException ex, HttpServletRequest request) {
+        ErrorCodeSpec code = ex.getErrorCode();
+        ApiError error = ApiError.of(code, ex.getMessage(), List.of(), traceId(request));
+        return envelopes.fail(code.status(), error, request);
     }
 
-    // 2) @Valid / @RequestBody 검증 실패
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidException(MethodArgumentNotValidException ex, WebRequest req) {
-        // 첫 번째 필드 에러 메시지만 예시로 뽑아봄
-        String message = ex.getBindingResult().getFieldErrors().stream()
-                .findFirst()
-                .map(fe -> fe.getField() + " " + fe.getDefaultMessage())
-                .orElse("잘못된 요청입니다.");
+    public ResponseEntity<ApiEnvelope<Void>> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request
+    ) {
+        List<FieldErrorItem> fieldErrors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(this::toFieldErrorItem)
+                .toList();
 
-        ErrorResponse body = ErrorResponse.of(
-                HttpStatus.BAD_REQUEST.value(),
-                ErrorCode.VALIDATION_FAILED.name(),
-                message,
-                req.getDescription(false).replace("uri=", "")
-        );
-        return ResponseEntity.badRequest().body(body);
+        ErrorCodeSpec code = ErrorCode.VALIDATION_ERROR;
+        ApiError error = ApiError.of(code, code.defaultMessage(), fieldErrors, traceId(request));
+        return envelopes.fail(code.status(), error, request);
     }
 
-    // 3) URI 잘못 호출 (404)
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(NoHandlerFoundException ex, WebRequest req) {
-        ErrorResponse body = ErrorResponse.of(
-                HttpStatus.NOT_FOUND.value(),
-                ErrorCode.NOT_FOUND.name(),
-                "존재하지 않는 API 입니다.",
-                req.getDescription(false).replace("uri=", "")
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-    }
-
-    // 4) ConstraintViolation (path variable, request param 검증 실패)
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolation(ConstraintViolationException ex, WebRequest req) {
-        String message = ex.getConstraintViolations().stream()
-                .findFirst()
-                .map(cv -> cv.getPropertyPath() + " " + cv.getMessage())
-                .orElse("잘못된 요청입니다.");
+    public ResponseEntity<ApiEnvelope<Void>> handleConstraintViolation(
+            ConstraintViolationException ex,
+            HttpServletRequest request
+    ) {
+        List<FieldErrorItem> fieldErrors = ex.getConstraintViolations()
+                .stream()
+                .map(v -> new FieldErrorItem(v.getPropertyPath().toString(), "CONSTRAINT", v.getMessage()))
+                .toList();
 
-        ErrorResponse body = ErrorResponse.of(
-                HttpStatus.BAD_REQUEST.value(),
-                ErrorCode.VALIDATION_FAILED.name(),
-                message,
-                req.getDescription(false).replace("uri=", "")
-        );
-        return ResponseEntity.badRequest().body(body);
+        ErrorCodeSpec code = ErrorCode.VALIDATION_ERROR;
+        ApiError error = ApiError.of(code, code.defaultMessage(), fieldErrors, traceId(request));
+        return envelopes.fail(code.status(), error, request);
     }
 
-    // 5) 나머지 알 수 없는 예외 (500)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiEnvelope<Void>> handleBadJson(
+            HttpMessageNotReadableException ex,
+            HttpServletRequest request
+    ) {
+        ErrorCodeSpec code = ErrorCode.REQUEST_BODY_NOT_READABLE;
+        ApiError error = ApiError.of(code, "요청 본문(JSON) 형식이 올바르지 않습니다.", List.of(), traceId(request));
+        return envelopes.fail(code.status(), error, request);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ApiEnvelope<Void>> handleNoHandler(NoHandlerFoundException ex, HttpServletRequest request) {
+        ErrorCodeSpec code = ErrorCode.NOT_FOUND;
+        ApiError error = ApiError.of(code, "존재하지 않는 API 입니다.", List.of(), traceId(request));
+        return envelopes.fail(code.status(), error, request);
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleUnknown(Exception ex, WebRequest req) {
-        log.error("Unhandled exception caught:", ex);
-        ErrorResponse body = ErrorResponse.of(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                ErrorCode.INTERNAL_SERVER_ERROR.name(),
-                "서버 오류가 발생했습니다.",
-                req.getDescription(false).replace("uri=", "")
-        );
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    public ResponseEntity<ApiEnvelope<Void>> handleUnknown(Exception ex, HttpServletRequest request) {
+        log.error("Unhandled exception", ex);
+        ErrorCodeSpec code = ErrorCode.INTERNAL_SERVER_ERROR;
+        ApiError error = ApiError.of(code, code.defaultMessage(), List.of(), traceId(request));
+        return envelopes.fail(code.status(), error, request);
+    }
+
+    private FieldErrorItem toFieldErrorItem(FieldError fe) {
+        return new FieldErrorItem(fe.getField(), fe.getCode(), fe.getDefaultMessage());
+    }
+
+    private String traceId(HttpServletRequest request) {
+        String traceId = MDC.get("traceId");
+        if (traceId != null && !traceId.isBlank()) {
+            return traceId;
+        }
+        Object requestId = request.getAttribute(RequestIds.REQUEST_ID_ATTR);
+        return requestId == null ? null : requestId.toString();
     }
 }

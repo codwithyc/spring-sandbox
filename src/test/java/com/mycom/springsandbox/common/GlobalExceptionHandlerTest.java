@@ -3,7 +3,7 @@ package com.mycom.springsandbox.common;
 import com.mycom.springsandbox.common.enums.ErrorCode;
 import com.mycom.springsandbox.common.exception.BusinessException;
 import com.mycom.springsandbox.common.handler.GlobalExceptionHandler;
-import com.mycom.springsandbox.common.response.ErrorResponse;
+import com.mycom.springsandbox.common.error.ApiError;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ class GlobalExceptionHandlerTest {
         when(req.getDescription(false)).thenReturn("uri=/api/user/1");
 
         // When
-        ResponseEntity<ErrorResponse> response = handler.handleBusiness(businessException, req);
+        ResponseEntity<ApiError> response = handler.handleBusiness(businessException, req);
 
         // Then
         // 예외가 올바르게 처리되었는지 검증합니다.
