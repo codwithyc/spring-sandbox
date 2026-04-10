@@ -8,7 +8,7 @@ public record ApiError(
         String message,
         String messageKey,
         List<FieldErrorItem> fieldErrors,
-        String traceId
+        String requestId
 ) {
     public ApiError {
         fieldErrors = (fieldErrors == null) ? List.of() : List.copyOf(fieldErrors);
@@ -18,7 +18,7 @@ public record ApiError(
             ErrorCodeSpec code,
             String message,
             List<FieldErrorItem> fieldErrors,
-            String traceId
+            String requestId
     ) {
         String resolvedMessage = (message == null || message.isBlank()) ? code.defaultMessage() : message;
 
@@ -28,8 +28,7 @@ public record ApiError(
                 resolvedMessage,
                 code.messageKey(),
                 fieldErrors,
-                traceId
+                requestId
         );
     }
 }
-
