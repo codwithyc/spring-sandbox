@@ -1,21 +1,23 @@
 package com.mycom.springsandbox.common.exception;
 
-import com.mycom.springsandbox.common.enums.ErrorCode;
+import com.mycom.springsandbox.common.error.ErrorCodeSpec;
 
 public class BusinessException extends RuntimeException {
-  private final ErrorCode errorCode;
 
-  public BusinessException(ErrorCode errorCode) {
-    super(errorCode.getDefaultMessage());
+  private final ErrorCodeSpec errorCode;
+
+  public BusinessException(ErrorCodeSpec errorCode) {
+    super(errorCode.defaultMessage());
     this.errorCode = errorCode;
   }
 
-  public BusinessException(ErrorCode errorCode, String detailMessage) {
+  public BusinessException(ErrorCodeSpec errorCode, String detailMessage) {
     super(detailMessage);
     this.errorCode = errorCode;
   }
 
-  public ErrorCode getErrorCode() {
+  public ErrorCodeSpec getErrorCode() {
     return errorCode;
   }
 }
+
