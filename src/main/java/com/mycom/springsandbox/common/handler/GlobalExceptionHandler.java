@@ -93,7 +93,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(this::toFieldErrorItem)
                 .toList();
 
-        return frameworkFail(httpRequest(request), ErrorCode.VALIDATION_ERROR, ErrorCode.VALIDATION_ERROR.defaultMessage(), fieldErrors);
+        return frameworkFail(httpRequest(request), headers, ErrorCode.VALIDATION_ERROR, ErrorCode.VALIDATION_ERROR.defaultMessage(), fieldErrors);
     }
 
     @Override
@@ -105,6 +105,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         return frameworkFail(
                 httpRequest(request),
+                headers,
                 ErrorCode.REQUEST_BODY_NOT_READABLE,
                 "요청 본문(JSON) 형식이 올바르지 않습니다.",
                 List.of()
@@ -118,8 +119,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatusCode status,
             WebRequest request
     ) {
+        // 405는 URL은 매칭됐지만 HTTP method가 허용되지 않았다는 의미이므로 Allow 헤더를 보존한다.
         return frameworkFail(
                 httpRequest(request),
+                headers,
                 ErrorCode.METHOD_NOT_ALLOWED,
                 ErrorCode.METHOD_NOT_ALLOWED.defaultMessage(),
                 List.of()
@@ -135,6 +138,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         return frameworkFail(
                 httpRequest(request),
+                headers,
                 ErrorCode.UNSUPPORTED_MEDIA_TYPE,
                 ErrorCode.UNSUPPORTED_MEDIA_TYPE.defaultMessage(),
                 List.of()
@@ -150,6 +154,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         return frameworkFail(
                 httpRequest(request),
+                headers,
                 ErrorCode.NOT_ACCEPTABLE,
                 ErrorCode.NOT_ACCEPTABLE.defaultMessage(),
                 List.of()
@@ -164,7 +169,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             WebRequest request
     ) {
         String message = "%s 파라미터는 필수입니다.".formatted(ex.getParameterName());
-        return frameworkFail(httpRequest(request), ErrorCode.INVALID_INPUT, message, List.of());
+        return frameworkFail(httpRequest(request), headers, ErrorCode.INVALID_INPUT, message, List.of());
     }
 
     @Override
@@ -176,7 +181,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         String propertyName = ex.getPropertyName() == null ? "요청 값" : ex.getPropertyName();
         String message = "%s 타입이 올바르지 않습니다.".formatted(propertyName);
-        return frameworkFail(httpRequest(request), ErrorCode.INVALID_INPUT, message, List.of());
+        return frameworkFail(httpRequest(request), headers, ErrorCode.INVALID_INPUT, message, List.of());
     }
 
     @Override
@@ -186,7 +191,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatusCode status,
             WebRequest request
     ) {
-        return frameworkFail(httpRequest(request), ErrorCode.NOT_FOUND, "존재하지 않는 API 입니다.", List.of());
+        return frameworkFail(httpRequest(request), headers, ErrorCode.NOT_FOUND, "존재하지 않는 API 입니다.", List.of());
     }
 
     private FieldErrorItem toFieldErrorItem(FieldError fe) {
@@ -195,16 +200,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> frameworkFail(
             HttpServletRequest request,
+            HttpHeaders headers,
             ErrorCodeSpec code,
             String message,
             List<FieldErrorItem> fieldErrors
     ) {
         ApiError error = ApiError.of(code, message, fieldErrors, requestId(request));
         ResponseEntity<ApiEnvelope<Void>> response = envelopes.fail(code.status(), error, request);
+        HttpHeaders mergedHeaders = new HttpHeaders();
+        mergedHeaders.addAll(headers);
+        mergedHeaders.addAll(response.getHeaders());
 
         return ResponseEntity
                 .status(response.getStatusCode())
-                .headers(response.getHeaders())
+                .headers(mergedHeaders)
                 .body(response.getBody());
     }
 

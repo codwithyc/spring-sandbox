@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -56,6 +57,7 @@ class GlobalExceptionHandlerTest {
     void handleMethodNotAllowed() throws Exception {
         mockMvc.perform(get("/test/echo").header("X-Request-Id", "req-789"))
                 .andExpect(status().isMethodNotAllowed())
+                .andExpect(header().string(HttpHeaders.ALLOW, "POST"))
                 .andExpect(jsonPath("$.error.code").value("COM-4007"))
                 .andExpect(jsonPath("$.error.requestId").value("req-789"))
                 .andExpect(jsonPath("$.meta.requestId").value("req-789"));
