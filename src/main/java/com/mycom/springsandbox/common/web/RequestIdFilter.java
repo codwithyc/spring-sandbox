@@ -15,18 +15,16 @@ import java.util.UUID;
 @Component
 public class RequestIdFilter extends OncePerRequestFilter {
 
-    private static final String REQUEST_ID_HEADER = "X-Request-Id";
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        String requestId = Optional.ofNullable(request.getHeader(REQUEST_ID_HEADER))
+        String requestId = Optional.ofNullable(request.getHeader(RequestIds.REQUEST_ID_HEADER))
                 .filter(v -> !v.isBlank())
                 .orElse(UUID.randomUUID().toString());
 
         request.setAttribute(RequestIds.REQUEST_ID_ATTR, requestId);
-        response.setHeader(REQUEST_ID_HEADER, requestId);
+        response.setHeader(RequestIds.REQUEST_ID_HEADER, requestId);
         MDC.put("requestId", requestId);
 
         try {
