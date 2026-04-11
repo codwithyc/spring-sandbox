@@ -29,6 +29,6 @@ jobs:
         run: ./gradlew clean build --info
 
       - name: Deploy to Production
-        if: startsWith(github.ref, 'refs/tags/v_') # 태그 푸시일 때만 배포 실행
+        if: startsWith(github.ref, 'refs/tags/v') # 태그 푸시일 때만 배포 실행
         run: |
           ./scripts/deploy-prod.sh
