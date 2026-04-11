@@ -263,4 +263,3 @@ HTTP status code는 유지하되, body에도 `success`와 `error`를 명시합�
 - `docs/common/v1/adr/ADR-005-global-exception-handler.md`
 - `docs/common/v1/theory/http/XRequestId.md`
 - `docs/common/v1/theory/spring/jackson/JsonInclude.md`
-- `docs/common/v1/policy/EXCEPTION_HANDLING.md`

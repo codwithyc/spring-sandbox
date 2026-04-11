@@ -210,7 +210,7 @@ Spring MVC는 요청 본문 파싱 실패, HTTP 메서드 불일치, 지원하�
 - `src/main/java/com/mycom/springsandbox/common/web/RequestIds.java`
 - `docs/common/v1/adr/ADR-003-error-code-management.md`
 - `docs/common/v1/adr/ADR-004-exception.md`
+- `docs/common/v1/theory/java/oop/Override.md`
 - `docs/common/v1/theory/spring/annotation/RestControllerAdvice.md`
 - `docs/common/v1/theory/spring/exception/ResponseEntityExceptionHandler.md`
 - `docs/common/v1/theory/spring/validation/BeanValidation.md`
-- `docs/common/v1/policy/EXCEPTION_HANDLING.md`

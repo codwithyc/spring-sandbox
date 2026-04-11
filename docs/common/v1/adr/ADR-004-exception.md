@@ -222,4 +222,3 @@ public class MemberNotFoundException extends NotFoundException {
 - `src/main/java/com/mycom/springsandbox/common/enums/ErrorCode.java`
 - `docs/common/v1/adr/ADR-003-error-code-management.md`
 - `docs/common/v1/theory/java/exception/RuntimeException.md`
-- `docs/common/v1/policy/EXCEPTION_HANDLING.md`

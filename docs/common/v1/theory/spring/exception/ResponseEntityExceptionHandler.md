@@ -95,6 +95,7 @@ protected ResponseEntity<Object> handleHttpMessageNotReadable(
 주의할 점은 다음과 같습니다.
 
 - override 메서드의 시그니처가 Spring 버전에 맞아야 합니다.
+- override 메서드가 받은 `headers`, `status`, `request`는 Spring이 계산한 응답 문맥일 수 있으므로 필요한 값을 보존해야 합니다.
 - framework 예외 응답도 프로젝트 envelope 형식을 유지해야 합니다.
 - validation field error를 만들 때 내부 객체 전체를 노출하지 않아야 합니다.
 - fallback `Exception` handler와 중복되지 않도록 예상 가능한 framework 예외는 명시적으로 매핑하는 것이 좋습니다.
@@ -104,4 +105,5 @@ protected ResponseEntity<Object> handleHttpMessageNotReadable(
 - `src/main/java/com/mycom/springsandbox/common/handler/GlobalExceptionHandler.java`
 - `src/main/java/com/mycom/springsandbox/common/error/FieldErrorItem.java`
 - `docs/common/v1/adr/ADR-005-global-exception-handler.md`
+- `docs/common/v1/theory/java/oop/Override.md`
 - `docs/common/v1/theory/spring/annotation/RestControllerAdvice.md`
