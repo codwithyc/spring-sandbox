@@ -1,4 +1,4 @@
-# Branching Strategy (Gitflow + Jira)
+# Branching Strategy (Gitflow)
 ## 1. 기본 브랜치
 | 브랜치 | 역할 |
 |------|------|
@@ -6,18 +6,18 @@
 | dev | 개발 통합 브랜치. 모든 기능 브랜치의 머지 대상 |
 
 ## 2. 브랜치 타입 (Prefix)
-모든 작업 브랜치는 Jira 티켓 키를 포함한다.
+모든 작업 브랜치는 Github Issude Number를 기준으로 합니다.
 
 형식:
 ```
-<prefix>/<jira-key>-<short-description>
+<prefix>/<issueNumber>-<short-description>
 ```
 
 예:
 ```
-feature/ANS-123-login-api
-refactor/ANS-245-auth-service-cleanup
-chore/ANS-310-update-gradle
+feature/123-login-api
+refactor/245-auth-service-cleanup
+chore/10-update-gradle
 ```
 
 ### Prefix 종류
@@ -35,7 +35,7 @@ chore/ANS-310-update-gradle
 1. dev 브랜치에서 작업 브랜치 생성
 ```
 git checkout dev
-git checkout -b feature/ANS-123-login-api
+git checkout -b feature/123-login-api
 ```
 2. 개발 및 커밋
 3. dev 대상으로 Pull Request 생성
@@ -75,7 +75,7 @@ git push origin v1.2.0
 
 형식:
 ```
-hotfix/<jira-key>-<short-description>
+hotfix/<issueNumber>-<short-description>
 ```
 
 사용 기준:
@@ -88,7 +88,7 @@ hotfix/<jira-key>-<short-description>
 1. main 브랜치에서 hotfix 브랜치 생성
 ```
 git checkout main
-git checkout -b hotfix/ANS-999-payment-null-pointer
+git checkout -b hotfix/999-payment-null-pointer
 ```
 2. 수정 및 커밋
 3. main 브랜치로 머지
@@ -101,7 +101,7 @@ git push origin v1.2.1
 
 ## 6. Pull Request 규칙
 
-- 모든 PR은 Jira 티켓 키 포함
+- 모든 PR은 Github Issue 포함
 - PR 제목 형식:
 ```
 [ANS-123] Login API 구현
@@ -131,4 +131,3 @@ v1.2.3
 ## 9. 금지 사항
 - main 브랜치 직접 커밋 금지
 - dev 브랜치 직접 커밋 금지
-- Jira 티켓 없는 브랜치 생성 금지
