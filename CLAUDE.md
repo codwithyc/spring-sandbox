@@ -21,6 +21,7 @@ Spring 백엔드 개념·설계 판단을 코드·테스트·문서로 검증하
 
 | 문서 | 요점 |
 |---|---|
+| `ISSUE_POLICY.md` | Study(개념 → 학습 테스트 → 이론 문서) 먼저, Feature 는 그 위에. 마일스톤 = 학습 장, 이슈 = 장 안 주제 하나 |
 | `BRANCH_STRATEGY.md` | 이슈 먼저 → `<prefix>/<issue>-<desc>` 브랜치 → dev 로 PR(squash). main·dev 직접 커밋 금지 |
 | `COMMIT_CONVENTION.md` | gitmoji 1개 + 한국어 제목, 본문은 `.gitmessage.txt`(변경 이유 / 주요 변경 사항 / 비고) |
 | `FOLDERING_POLICY.md` | 도메인 패키지 + 내부 레이어(api/application/domain/infrastructure), 공통은 `common` |

@@ -88,6 +88,9 @@ src/main/java/com/mycom/springsandbox
 - 예:
   - `src/main/java/com/mycom/springsandbox/order/application/...`
   - `src/test/java/com/mycom/springsandbox/order/application/...`
+- 학습 테스트(Study 이슈)는 운영 코드와 섞지 않고 `study/<주제>` 아래에 둔다.
+  - `src/test/java/com/mycom/springsandbox/study/core/...`
+  - 주제 이름은 학습 장 기준으로 짓는다 (`core`, `boot`, `web`, `aop`, `data` …).
 
 ## 9. 금지 규칙
 - `controller`, `service`, `repository`를 전역 루트로 두는 레이어 단일 구조 금지

@@ -29,6 +29,7 @@ chore/10-update-gradle
 | chore | 빌드, 설정, 의존성, 스크립트, 문서 변경 |
 | test | 테스트 코드 추가/수정 |
 | docs | 문서 수정 |
+| study | 개념 학습 (학습 테스트 + 이론 문서, `ISSUE_POLICY.md` 참고) |
 
 ## 3. Feature / Refactor / Fix / Chore 흐름
 
